@@ -31,6 +31,8 @@ body {
   max-width: 64rem;
 }
 
+/* MEDIA QUERIES */
+
 /* Medium and small screens (640px) */
 @media (min-width: 640px) {
   html { font-size: 112%; }
@@ -46,7 +48,7 @@ body {
   .column.half { width: 50%; }
   .column.third { width: 33.3%; }
   .column.fourth { width: 25%; }
-  .column.flow-opposite { float: right; }  
+  .column.flow-opposite { float: right; }
 }
 /* Large screens (1024px) */
 @media (min-width: 1024px) {
