@@ -32,6 +32,23 @@ var albumMarconi = {
   ]
 };
 
+// -- THIRD EXAMPLE ALBUM --
+
+var albumEmoji = {
+  title: 'Songs of Emoji',
+  artist: 'Dr Moji',
+  label: 'Text Records',
+  year: '2016',
+  albumArtUrl: 'assets/images/album_covers/02.png',
+  songs: [
+    { title: 'Smiley', duration: '1:01' },
+    { title: 'Dancing Lady in Red', duration: '5:01' },
+    { title: 'Cool Sunglasses', duration: '2:54' },
+    { title: 'Taco Emoji', duration: '3:49' },
+    { title: 'Poop Emoji', duration: '0:12' }
+  ]
+};
+
 
 // -- DYNAMICALLY GENERATE SONG ROW CONTENT --
 
@@ -49,13 +66,13 @@ var createSongRow = function(songNumber, songName, songLength) {
 
 // -- SET CURRENT ALBUM WHEN WINDOW.ONLOAD --
 
-var setCurrentAlbum = function(album) {
+var albumTitle = document.getElementsByClassName('album-view-title')[0];
+var albumArtist = document.getElementsByClassName('album-view-artist')[0];
+var albumReleaseInfo = document.getElementsByClassName('album-view-release-info')[0];
+var albumImage = document.getElementsByClassName('album-cover-art')[0];
+var albumSongList = document.getElementsByClassName('album-view-song-list')[0];
 
-  var albumTitle = document.getElementsByClassName('album-view-title')[0];
-  var albumArtist = document.getElementsByClassName('album-view-artist')[0];
-  var albumReleaseInfo = document.getElementsByClassName('album-view-release-info')[0];
-  var albumImage = document.getElementsByClassName('album-cover-art')[0];
-  var albumSongList = document.getElementsByClassName('album-view-song-list')[0];
+var setCurrentAlbum = function(album) {
 
   albumTitle.firstChild.nodeValue = album.title;
   albumArtist.firstChild.nodeValue = album.artist;
@@ -69,8 +86,21 @@ var setCurrentAlbum = function(album) {
   }
 };
 
-// -- EVENT LISTENER --
+// -- EVENT LISTENER ONLOAD --
 
 window.onload = function() {
   setCurrentAlbum(albumPicasso);
 };
+
+// -- EVENT LISTENER ALBUM TOGGLE --
+
+var albums = [albumPicasso, albumMarconi, albumEmoji];
+var index = 1;
+
+albumImage.addEventListener("click", function(event) {
+  setCurrentAlbum(albums[index]);
+  index++;
+    if (index == albums.length) {
+      index = 0;
+    }
+  });
