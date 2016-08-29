@@ -11,7 +11,7 @@ var albumPicasso = {
     { title: 'Green', duration: '3:12' },
     { title: 'Red', duration: '1:58' },
     { title: 'Pink', duration: '4:01' },
-    { title: 'white', duration: '2:15' }
+    { title: 'White', duration: '2:15' }
   ]
 };
 
@@ -95,8 +95,10 @@ var songRows = document.getElementsByClassName('album-view-song-item');
 var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
 
 
-window.onload = function() {
-  setCurrentAlbum(albumPicasso);
+
+setCurrentAlbum(albumPicasso);
+
+  window.onload = function() {
 };
 
 // When MOUSEOVER set Play Button

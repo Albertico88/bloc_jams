@@ -50,14 +50,17 @@ body.album {
 .song-item-number {
   width: 5%;
   min-width: 30px;
+  border-bottom: 1px solid white;
 }
 
 .song-item-title {
   width: 85%;
+  border-bottom: 1px solid white;
 }
 
 .song-item-duration {
   width: 5%;
+  border-bottom: 1px solid white;
 }
 
 .album-song-button {
