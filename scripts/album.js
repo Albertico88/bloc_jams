@@ -87,13 +87,22 @@ var setCurrentAlbum = function(album) {
 };
 
 // Change SONG-ITEM-NUMBER to --> PAUSE BUTTON
+
 var findParentByClassName = function(element, targetClass) {
   if (element) {
     var currentParent = element.parentElement;
-    while (currentParent.className != targetClass && currentParent.className !== null) {
-      currentParent = currentParent.parentElement;
-    }
+
+    if (currentParent.className === null) {
+      alert('No Parent Found');
+    } else if (currentParent.className !== targetClass) {
+      alert('No Parent Found with that class name');
+    } else {
+
+      while (currentParent.className != targetClass && currentParent.className !== null) {
+        currentParent = currentParent.parentElement;
+      }
     return currentParent;
+    }
   }
 };
 
@@ -147,15 +156,14 @@ var pauseButtonTemplate = '<a class="album-song-button"><span class="ion-pause">
 var currentlyPlayingSong = null;
 
 setCurrentAlbum(albumPicasso);
-// ONLOAD
-  window.onload = function() {
-};
+
 
 // When MOUSEOVER set Play Button
   songListContainer.addEventListener('mouseover', function(event) {
     if (event.target.parentElement.className === 'album-view-song-item') {
         // The TARGET property on the EVENT object stores the DOM element where the event occurred.
         var songItem = getSongItem(event.target);
+        console.log('Hovered over item ' + songItem.getAttribute('data-song-number'))
 
           if (songItem.getAttribute('data-song-number') !== currentlyPlayingSong) {
             songItem.innerHTML = playButtonTemplate;
