@@ -1,4 +1,12 @@
 // -- DYNAMICALLY GENERATE SONG ROW CONTENT --
+var setSong = function(songNumber) {
+  currentlyPlayingSongNumber = parseInt(songNumber);
+  currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
+};
+
+var getSongNumberCell = function(number) {
+  return $('.song-item-number[data-song-number="' + number + '"]');
+};
 
 var createSongRow = function(songNumber, songName, songLength) {
   var template =
@@ -16,14 +24,14 @@ var createSongRow = function(songNumber, songName, songLength) {
 
       if (currentlyPlayingSongNumber !== null) {
   // Revert to song number for currently playing song because user started playing new song.
-        var currentlyPlayingCell = $('.song-item-number[data-song-number="' + currentlyPlayingSongNumber + '"]');
+        var currentlyPlayingCell = getSongNumberCell(currentlyPlayingSongNumber);
         currentlyPlayingCell.html(currentlyPlayingSongNumber);
       }
 
       if (currentlyPlayingSongNumber !== songNumber) {
   // Switch from Play -> Pause button to indicate new song is playing.
         $(this).html(pauseButtonTemplate);
-        currentlyPlayingSongNumber = songNumber;
+        setSong(songNumber);
         currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
         updatePlayerBarSong();
       }
