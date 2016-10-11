@@ -1,4 +1,4 @@
-//  Handles the assignment of the current song
+//  Handles the assignment of the current playing song
 var setSong = function(songNumber) {
   currentlyPlayingSongNumber = parseInt(songNumber);
   currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
@@ -27,24 +27,28 @@ var createSongRow = function(songNumber, songName, songLength) {
   var $row = $(template);
 
   var clickHandler = function() {
-    var songNumber = parseInt($(this).attr('data-song-number'));
+    var songNumber = parseInt($(this).attr('data-song-number')); // what is (this) here? clickHandler?..
 
+  // Revert to song number for currently playing song because user started playing a new song.
+  // if currentlyPlayingSongNumber is NOT null, get the currentlyPlayingCell and set it's HTML to the currentlyPlayingSongNumber.
       if (currentlyPlayingSongNumber !== null) {
-  // Revert to song number for currently playing song because user started playing new song.
         var currentlyPlayingCell = getSongNumberCell(currentlyPlayingSongNumber);
         currentlyPlayingCell.html(currentlyPlayingSongNumber);
       }
 
+  // PLAYING -- Switch button from PLAY to PAUSE button to indicate new song is playing.
+  // if the currentlyPlayingSongNumber doesn't equal the current songNumber, grab this and set it to the pauseButtonTemplate. Set the song by passing in the song number to that function. Set the currentSongFromAlbum to the appropriate song's array index. Update the PlayerBar.
       if (currentlyPlayingSongNumber !== songNumber) {
-  // Switch from Play -> Pause button to indicate new song is playing.
-        $(this).html(pauseButtonTemplate);
+        $(this).html(pauseButtonTemplate); // $(this) refering to songNumber above.
         setSong(songNumber);
+        currentSoundFile.play();
         currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
         updatePlayerBarSong();
       }
 
+  // PAUSED -- Switch button from PAUSE to PLAY button to pause currently playing song.
+  // if currentlyPlayingSongNumber is the song that was clicked, songNumber, set the playButtonTemplate, pause the song, and unload the currentlyPlayingSongNumber and currentSongFromAlbum variables.
       else if (currentlyPlayingSongNumber === songNumber) {
-  // Switch from Pause -> Play button to pause currently playing song.
         $(this).html(playButtonTemplate);
         $('.main-controls .play-pause').html(playerBarPlayButton);
         currentlyPlayingSongNumber = null;
@@ -70,8 +74,8 @@ var createSongRow = function(songNumber, songName, songLength) {
     }
   };
 
-  $row.find('.song-item-number').click(clickHandler);
-  $row.hover(onHover, offHover);
+  $row.find('.song-item-number').click(clickHandler); // jQuery CLICK event
+  $row.hover(onHover, offHover); // jQuery HOVER event
   return $row;
 };
 
