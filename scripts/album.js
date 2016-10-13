@@ -8,7 +8,7 @@ var setSong = function(songNumber) {
   currentlyPlayingSongNumber = parseInt(songNumber);
   currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
 
-  currentSoundFile = new buzz.sound(currentSongFromAlbum.audioURl, {
+  currentSoundFile = new buzz.sound(currentSongFromAlbum.audioURL, {
     formats: ['mp3'],
     preload: true
   });
@@ -42,7 +42,7 @@ var createSongRow = function(songNumber, songName, songLength) {
   var $row = $(template);
 
   var clickHandler = function() {
-    var songNumber = parseInt($(this).attr('data-song-number')); // what is (this) here? clickHandler?..
+    var songNumber = parseInt($(this).attr('data-song-number'));
 
   // Revert to song number for currently playing song because user started playing a new song.
   // if currentlyPlayingSongNumber is NOT null, get the currentlyPlayingCell and set it's HTML to the currentlyPlayingSongNumber.
@@ -210,11 +210,20 @@ var currentVolume = 85;
 var $previousButton = $('.main-controls .previous');
 var $nextButton = $('.main-controls .next');
 
+var togglePlayFromPlayerBar = function() {
+  if (setSong(currentSoundFile).isPaused() && $('.main-controls .play-pause').click) {
+    getSongNumberCell.html(pauseButtonTemplate);
+    $('.main-controls .play-pause').html(playerBarPauseButton);
+    currentSoundFile.play();
+  }
+};
+
 // ONLOAD
 $(document).ready(function() {
   setCurrentAlbum(albumPicasso);
   $previousButton.click(previousSong);
   $nextButton.click(nextSong);
+  $('.main-controls .play-pause').click(togglePlayFromPlayerBar());
 });
 
 
