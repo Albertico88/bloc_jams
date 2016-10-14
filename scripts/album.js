@@ -209,21 +209,32 @@ var currentVolume = 85;
 
 var $previousButton = $('.main-controls .previous');
 var $nextButton = $('.main-controls .next');
+var $playerBarPlayPauseButton = $('.main-controls .play-pause');
 
+
+// Allows to play and pause music from the Player Bar
 var togglePlayFromPlayerBar = function() {
-  if (setSong(currentSoundFile).isPaused() && $('.main-controls .play-pause').click) {
-    getSongNumberCell.html(pauseButtonTemplate);
-    $('.main-controls .play-pause').html(playerBarPauseButton);
+  var currentlyPlayingCell = getSongNumberCell(currentlyPlayingSongNumber);
+
+  if (currentSoundFile.isPaused() && $playerBarPlayPauseButton.click) {
+    currentlyPlayingCell.html(pauseButtonTemplate);
+    $playerBarPlayPauseButton.html(playerBarPauseButton);
     currentSoundFile.play();
   }
+  else if (currentSoundFile && $playerBarPlayPauseButton.click) {
+    currentlyPlayingCell.html(playButtonTemplate);
+    $playerBarPlayPauseButton.html(playerBarPlayButton);
+    currentSoundFile.pause();
+  }
 };
+
 
 // ONLOAD
 $(document).ready(function() {
   setCurrentAlbum(albumPicasso);
   $previousButton.click(previousSong);
   $nextButton.click(nextSong);
-  $('.main-controls .play-pause').click(togglePlayFromPlayerBar());
+  $playerBarPlayPauseButton.click(togglePlayFromPlayerBar);
 });
 
 
