@@ -184,13 +184,46 @@ var previousSong = function() {
 };
 
 
-// Update Player Bar Info
+// ---- MUSIC PLAYER BAR ----
+// Update Player Bar Song Name and Artist
 var updatePlayerBarSong = function() {
   $('.currently-playing .song-name').text(currentSongFromAlbum.title);
   $('.currently-playing .artist-name').text(currentAlbum.artist);
   $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.title + " - " + currentAlbum.artist);
 
   $('.main-controls .play-pause').html(playerBarPauseButton);
+};
+
+// SEEK BAR
+// (1) The function must take two arguments, one for the seek bar to alter (either the volume or audio playback controls) and one for the ratio that will determine the width and left values of the .fill and .thumb classes.
+// (2) The ratio must be converted to a percentage so we can set the CSS property values as percents
+// (3) The percentage must be passed into jQuery functions that set the width and left CSS properties
+var updateSeekPercentage = function($seekBar, seekBarFillRatio) {
+  var offsetXPercent = seekBarFillRatio * 100; // we multiply by 100 to determine a %
+
+// we use the built-in JavaScript Math.max() function to make sure our percentage isn't less than zero and the Math.min() function to make sure it doesn't exceed 100
+  offsetXPercent = Math.max(0, offsetXPercent);
+  offsetXPercent = Math.min(100, offsetXPercent);
+
+// we convert our percentage to a string and add the % character. When we set the width of the .fill class and the left value of the .thumb class, the CSS interprets the value as a percent instead of a unit-less number between 0 and 100.
+  var percentageString = offsetXPercent + '%';
+  $seekBar.find('.fill').width(percentageString);
+  $seekBar.find('.thumb').css({left: precentageString});
+};
+
+// Method for determining the seekBarFillRatio. We will use a click event to determine the fill width abd thumb location of the seek bar.
+var setupSeekBars = function() {
+  var $seekBars = $('.player-bar .seek-bar');
+
+  $seekBars.click(function(event) {
+// pageX = jQuery-specific event value, which holds the X coordinate (horizontal).
+    var offsetX = event.pageX - $(this).offset().left;
+    var barWidth = $(this).width();
+
+    var seekBarFillRatio = offsetX / barWidth;
+
+    updateSeekPercentage($(this), seekBarFillRatio);
+  });
 };
 
 
