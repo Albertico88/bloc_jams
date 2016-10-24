@@ -185,6 +185,7 @@ var previousSong = function() {
 
 
 // ---- MUSIC PLAYER BAR ----
+
 // Update Player Bar Song Name and Artist
 var updatePlayerBarSong = function() {
   $('.currently-playing .song-name').text(currentSongFromAlbum.title);
@@ -194,12 +195,12 @@ var updatePlayerBarSong = function() {
   $('.main-controls .play-pause').html(playerBarPauseButton);
 };
 
-// SEEK BAR
+// -- SEEK BAR --
 // (1) The function must take two arguments, one for the seek bar to alter (either the volume or audio playback controls) and one for the ratio that will determine the width and left values of the .fill and .thumb classes.
 // (2) The ratio must be converted to a percentage so we can set the CSS property values as percents
 // (3) The percentage must be passed into jQuery functions that set the width and left CSS properties
 var updateSeekPercentage = function($seekBar, seekBarFillRatio) {
-  var offsetXPercent = seekBarFillRatio * 100; // we multiply by 100 to determine a %
+  var offsetXPercent = seekBarFillRatio * 100; // we multiply by 100 to determine %
 
 // we use the built-in JavaScript Math.max() function to make sure our percentage isn't less than zero and the Math.min() function to make sure it doesn't exceed 100
   offsetXPercent = Math.max(0, offsetXPercent);
@@ -211,18 +212,34 @@ var updateSeekPercentage = function($seekBar, seekBarFillRatio) {
   $seekBar.find('.thumb').css({left: precentageString});
 };
 
-// Method for determining the seekBarFillRatio. We will use a click event to determine the fill width abd thumb location of the seek bar.
+
+// Method for determining the seekBarFillRatio. We will use a click event to determine the fill width and thumb location of the seek bar.
 var setupSeekBars = function() {
   var $seekBars = $('.player-bar .seek-bar');
 
   $seekBars.click(function(event) {
 // pageX = jQuery-specific event value, which holds the X coordinate (horizontal).
+// We subtract the offset() of the seek bar held in $(this) from the left side.
     var offsetX = event.pageX - $(this).offset().left;
     var barWidth = $(this).width();
 
+// we divide offsetX by the width of the entire bar to calculate seekBarFillRatio.
     var seekBarFillRatio = offsetX / barWidth;
 
+// we pass $(this) as the $seekBar argument and seekBarFillRatio for its eponymous argument to updateSeekBarPercentage()
     updateSeekPercentage($(this), seekBarFillRatio);
+  });
+
+// Dragging the Thumb Position:
+// we find elements with a class of .thumb inside our $seekBars and add an event listener for the mousedown event. A click event fires when a mouse is pressed and released quickly, but the mousedown event will fire as soon as the mouse button is pressed down.
+  $seekBars.find('.thumb').mousedown(function(event) {
+
+  // $(this) will be equal to the .thumb node that was clicked. Because we are attaching an event to both the song seek and volume control, this is an important way for us to determine which of these nodes dispatched the event. We can then use the parent method, which will select the immediate parent of the node. This will be whichever seek bar this .thumb belongs to.
+    var $seekBar = $(this).parent();
+
+    $(document).bind('mousemove.thumb', function(event) {
+      
+    });
   });
 };
 
@@ -246,6 +263,7 @@ var $nextButton = $('.main-controls .next');
 // ONLOAD
 $(document).ready(function() {
   setCurrentAlbum(albumPicasso);
+  setupSeekBars();
   $previousButton.click(previousSong);
   $nextButton.click(nextSong);
 });
