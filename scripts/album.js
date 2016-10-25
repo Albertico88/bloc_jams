@@ -16,6 +16,12 @@ var setSong = function(songNumber) {
   setVolume(currentVolume);   // var currentVolume = 85;
 };
 
+// Changes the current song's playback location
+var seek = function(time) {
+  if (currentSoundFile) {
+    currentSoundFile.setTime(time); // setTime = Buzz method to change the position in a song
+  }
+};
 
 var setVolume = function(volume) {
   if (currentSoundFile) {
@@ -57,6 +63,7 @@ var createSongRow = function(songNumber, songName, songLength) {
         $(this).html(pauseButtonTemplate); // $(this) refering to songNumber above.
         setSong(songNumber);
         currentSoundFile.play();
+        updateSeekBarWhileSongPlays();
         currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
         updatePlayerBarSong();
       }
@@ -68,6 +75,7 @@ var createSongRow = function(songNumber, songName, songLength) {
           $(this).html(pauseButtonTemplate);
           $('.main-controls .play-pause').html(playerBarPauseButton);
           currentSoundFile.play();
+          updateSeekBarWhileSongPlays();
         } else {
           $(this).html(playButtonTemplate);
           $('.main-controls .play-pause').html(playerBarPlayButton);
@@ -146,6 +154,7 @@ var nextSong = function() {
 
   setSong(currentSongIndex + 1)
   currentSoundFile.play();
+  updateSeekBarWhileSongPlays();
   updatePlayerBarSong();
 
   var lastSongNumber = getLastSongNumber(currentSongIndex);
@@ -173,6 +182,7 @@ var previousSong = function() {
 
   setSong(currentSongIndex + 1);
   currentSoundFile.play();
+  updateSeekBarWhileSongPlays();
   updatePlayerBarSong();
 
   var lastSongNumber = getLastSongNumber(currentSongIndex);
@@ -196,6 +206,19 @@ var updatePlayerBarSong = function() {
 };
 
 // -- SEEK BAR --
+
+// Updating the Seek Bar when a song plays.
+var updateSeekBarWhileSongPlays = function() {
+  if (currentSoundFile) {
+    currentSoundFile.bind('timeupdate', function(event) {
+      var seekBarFillRatio = this.getTime() / this.getDuration();
+      var $seekBar = $('.seek-control .seek-bar');
+
+      updateSeekPercentage($seekBar, seekBarFillRatio);
+    });
+  }
+};
+
 // (1) The function must take two arguments, one for the seek bar to alter (either the volume or audio playback controls) and one for the ratio that will determine the width and left values of the .fill and .thumb classes.
 // (2) The ratio must be converted to a percentage so we can set the CSS property values as percents
 // (3) The percentage must be passed into jQuery functions that set the width and left CSS properties
@@ -209,9 +232,8 @@ var updateSeekPercentage = function($seekBar, seekBarFillRatio) {
 // we convert our percentage to a string and add the % character. When we set the width of the .fill class and the left value of the .thumb class, the CSS interprets the value as a percent instead of a unit-less number between 0 and 100.
   var percentageString = offsetXPercent + '%';
   $seekBar.find('.fill').width(percentageString);
-  $seekBar.find('.thumb').css({left: precentageString});
+  $seekBar.find('.thumb').css({left: percentageString});
 };
-
 
 // Method for determining the seekBarFillRatio. We will use a click event to determine the fill width and thumb location of the seek bar.
 var setupSeekBars = function() {
@@ -238,7 +260,16 @@ var setupSeekBars = function() {
     var $seekBar = $(this).parent();
 
     $(document).bind('mousemove.thumb', function(event) {
-      
+      var offsetX = event.pageX - $seekBar.offset().left;
+      var barWidth = $seekBar.width();
+      var seekBarFillRatio = offsetX / barWidth;
+
+      updateSeekPercentage($seekBar, seekBarFillRatio);
+    });
+
+    $(document).bind('mouseup.thumb', function() {
+      $(document).unbind('mousemove.thumb');
+      $(document).unbind('mouseup.thumb');
     });
   });
 };
