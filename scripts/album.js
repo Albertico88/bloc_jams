@@ -248,6 +248,13 @@ var setupSeekBars = function() {
 // we divide offsetX by the width of the entire bar to calculate seekBarFillRatio.
     var seekBarFillRatio = offsetX / barWidth;
 
+// check if user clicked on song bar or volume bar and update bar accordingly
+    if ($(this).parent().attr('class') == 'seek-control') {
+      seek(seekBarFillRatio * currentSoundFile.getDuration());//why multiply by song's duration?
+    } else {
+      setVolume(seekBarFillRatio * 100);
+    }
+
 // we pass $(this) as the $seekBar argument and seekBarFillRatio for its eponymous argument to updateSeekBarPercentage()
     updateSeekPercentage($(this), seekBarFillRatio);
   });
@@ -263,6 +270,12 @@ var setupSeekBars = function() {
       var offsetX = event.pageX - $seekBar.offset().left;
       var barWidth = $seekBar.width();
       var seekBarFillRatio = offsetX / barWidth;
+
+      if ($seekBar.parent().attr('class') == 'seek-control') {
+        seek(seekBarFillRatio * currentSoundFile.getDuration());
+      } else {
+        setVolume(seekBarFillRatio);
+      }
 
       updateSeekPercentage($seekBar, seekBarFillRatio);
     });
