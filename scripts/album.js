@@ -48,7 +48,7 @@ var createSongRow = function(songNumber, songName, songLength) {
   var $row = $(template);
 
   var clickHandler = function() {
-    var songNumber = parseInt($(this).attr('data-song-number')); // what is (this) here? clickHandler?..
+    var songNumber = parseInt($(this).attr('data-song-number'));
 
   // Revert to song number for currently playing song because user started playing a new song.
   // if currentlyPlayingSongNumber is NOT null, get the currentlyPlayingCell and set it's HTML to the currentlyPlayingSongNumber.
@@ -66,6 +66,11 @@ var createSongRow = function(songNumber, songName, songLength) {
         updateSeekBarWhileSongPlays();
         currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
         updatePlayerBarSong();
+
+        var $volumeFill = $('.volume .fill');
+        var $volumeThumb = $('.volume .thumb');
+        $volumeFill.width(currentVolume + '%');
+        $volumeThumb.css({left: currentVolume + '%'});
       }
 
   // PAUSED -- Switch button from PAUSE to PLAY button to pause currently playing song.
@@ -299,7 +304,7 @@ var currentAlbum = null;
 var currentlyPlayingSongNumber = null;
 var currentSongFromAlbum = null; //holds the currently playing song object from the songs array
 var currentSoundFile = null;
-var currentVolume = 85;
+var currentVolume = 80;
 
 var $previousButton = $('.main-controls .previous');
 var $nextButton = $('.main-controls .next');
