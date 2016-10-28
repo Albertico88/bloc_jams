@@ -208,6 +208,7 @@ var updatePlayerBarSong = function() {
   $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.title + " - " + currentAlbum.artist);
 
   $('.main-controls .play-pause').html(playerBarPauseButton);
+  // setTotalTimeInPlayerBar();    Does not work. Placed in updateSeekBarWhileSongPlays()
 };
 
 // -- SEEK BAR --
@@ -220,6 +221,8 @@ var updateSeekBarWhileSongPlays = function() {
       var $seekBar = $('.seek-control .seek-bar');
 
       updateSeekPercentage($seekBar, seekBarFillRatio);
+      setCurrentTimeInPlayerBar();
+      setTotalTimeInPlayerBar();
     });
   }
 };
@@ -255,7 +258,7 @@ var setupSeekBars = function() {
 
 // check if user clicked on song bar or volume bar and update bar accordingly
     if ($(this).parent().attr('class') == 'seek-control') {
-      seek(seekBarFillRatio * currentSoundFile.getDuration());//why multiply by song's duration?
+      seek(seekBarFillRatio * currentSoundFile.getDuration());
     } else {
       setVolume(seekBarFillRatio * 100);
     }
@@ -290,6 +293,17 @@ var setupSeekBars = function() {
       $(document).unbind('mouseup.thumb');
     });
   });
+};
+
+// ASSIGNMENT:
+// #1 Set the text of the element with the .current-time class to the current time in the song.
+var setCurrentTimeInPlayerBar = function() {
+  $('.seek-control .current-time').text(currentSoundFile.getTime());// current time in seconds
+};
+
+// #2 Set the total time of the song's length.
+var setTotalTimeInPlayerBar = function() {
+  $('.seek-control .total-time').text(currentSoundFile.getDuration());
 };
 
 
