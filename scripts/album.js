@@ -41,7 +41,7 @@ var createSongRow = function(songNumber, songName, songLength) {
     '<tr class="album-view-song-item">'
   + '<td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>'
   + '<td class="song-item-title">' + songName + '</td>'
-  + '<td class="song-item-duration">' + songLength + '</td>'
+  + '<td class="song-item-duration">' + filterTimeCode(songLength) + '</td>'
   + '</tr>'
   ;
 
@@ -295,15 +295,29 @@ var setupSeekBars = function() {
   });
 };
 
-// ASSIGNMENT:
-// #1 Set the text of the element with the .current-time class to the current time in the song.
+
+// Set the text of the element with the .current-time class to the current time in the song.
 var setCurrentTimeInPlayerBar = function() {
-  $('.seek-control .current-time').text(currentSoundFile.getTime());// current time in seconds
+  $('.seek-control .current-time').text(filterTimeCode(currentSoundFile.getTime()));
 };
 
-// #2 Set the total time of the song's length.
+// Set the total time of the song's length.
 var setTotalTimeInPlayerBar = function() {
-  $('.seek-control .total-time').text(currentSoundFile.getDuration());
+  $('.seek-control .total-time').text(filterTimeCode(currentSoundFile.getDuration()));
+};
+
+// Convert time from seconds to minutes X:XX format
+var filterTimeCode = function(timeInSeconds) {
+  var seconds = parseFloat(timeInSeconds); // parses a string into a number - seconds.
+  var wholeSeconds = Math.floor(seconds); // rounds down seconds
+  var minutes = Math.floor(wholeSeconds / 60); // converts seconds to minutes
+  var remainingSeconds = wholeSeconds % 60;
+  var output = minutes + ":"; // x:xx formatting
+    if (remainingSeconds < 10) {
+      output += "0"; // concatenate 0 to the 'output' string
+    }
+    output += remainingSeconds;
+  return output;
 };
 
 
